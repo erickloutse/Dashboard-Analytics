@@ -2,6 +2,9 @@
 
 Une application de tableau de bord d'analyse pour suivre le trafic d'un site web en temps réel.
 
+![Aperçu du projet 1](screenshot.png)
+![Aperçu du projet 2](screenshot-2.png)
+
 ## Fonctionnalités
 
 - Tableau de bord interactif avec ShadCN/UI et Tailwind CSS
