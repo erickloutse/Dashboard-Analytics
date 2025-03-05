@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { Calendar } from '@/components/ui/calendar';
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, Filter, X } from 'lucide-react';
-import { cn, formatDate } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { AnalyticsData, FilterOptions } from '@/lib/types';
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Calendar as CalendarIcon, Filter, X } from "lucide-react";
+import { cn, formatDate } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { AnalyticsData, FilterOptions } from "@/lib/types";
 import {
   Command,
   CommandEmpty,
@@ -18,7 +18,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
+} from "@/components/ui/command";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 
 interface FilterBarProps {
   filters: FilterOptions;
@@ -40,43 +40,46 @@ export function FilterBar({ filters, setFilters, data }: FilterBarProps) {
   const [pagesOpen, setPagesOpen] = useState(false);
 
   // Get unique pages, devices, and countries from data
-  const pages = [...new Set(data.pageViews.map(p => p.page))];
-  const devices = ['desktop', 'mobile', 'tablet'];
-  const countries = [...new Set(data.geoData.map(g => g.country))];
+  const pages = [...new Set(data.pageViews.map((p) => p.page))];
+  const devices = ["desktop", "mobile", "tablet"];
+  const countries = [...new Set(data.geoData.map((g) => g.country))];
 
   const clearFilters = () => {
     setFilters({
-      dateRange: { from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), to: new Date() },
+      dateRange: {
+        from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        to: new Date(),
+      },
       pages: [],
       devices: [],
-      countries: []
+      countries: [],
     });
   };
 
   const togglePage = (page: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       pages: prev.pages.includes(page)
-        ? prev.pages.filter(p => p !== page)
-        : [...prev.pages, page]
+        ? prev.pages.filter((p) => p !== page)
+        : [...prev.pages, page],
     }));
   };
 
   const toggleDevice = (device: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       devices: prev.devices.includes(device)
-        ? prev.devices.filter(d => d !== device)
-        : [...prev.devices, device]
+        ? prev.devices.filter((d) => d !== device)
+        : [...prev.devices, device],
     }));
   };
 
   const toggleCountry = (country: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       countries: prev.countries.includes(country)
-        ? prev.countries.filter(c => c !== country)
-        : [...prev.countries, country]
+        ? prev.countries.filter((c) => c !== country)
+        : [...prev.countries, country],
     }));
   };
 
@@ -96,7 +99,8 @@ export function FilterBar({ filters, setFilters, data }: FilterBarProps) {
               {filters.dateRange?.from ? (
                 filters.dateRange.to ? (
                   <>
-                    {formatDate(filters.dateRange.from)} - {formatDate(filters.dateRange.to)}
+                    {formatDate(filters.dateRange.from)} -{" "}
+                    {formatDate(filters.dateRange.to)}
                   </>
                 ) : (
                   formatDate(filters.dateRange.from)
@@ -117,9 +121,9 @@ export function FilterBar({ filters, setFilters, data }: FilterBarProps) {
               }}
               onSelect={(range) => {
                 if (range?.from && range?.to) {
-                  setFilters(prev => ({
+                  setFilters((prev) => ({
                     ...prev,
-                    dateRange: { from: range.from, to: range.to }
+                    dateRange: { from: range.from, to: range.to },
                   }));
                   setDateOpen(false);
                 }
@@ -131,11 +135,17 @@ export function FilterBar({ filters, setFilters, data }: FilterBarProps) {
 
         <Popover open={pagesOpen} onOpenChange={setPagesOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="justify-start text-left font-normal">
+            <Button
+              variant="outline"
+              className="justify-start text-left font-normal"
+            >
               <Filter className="mr-2 h-4 w-4" />
               Pages
               {filters.pages.length > 0 && (
-                <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
+                <Badge
+                  variant="secondary"
+                  className="ml-2 rounded-sm px-1 font-normal"
+                >
                   {filters.pages.length}
                 </Badge>
               )}
@@ -185,11 +195,17 @@ export function FilterBar({ filters, setFilters, data }: FilterBarProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="justify-start text-left font-normal">
+            <Button
+              variant="outline"
+              className="justify-start text-left font-normal"
+            >
               <Filter className="mr-2 h-4 w-4" />
               Appareils
               {filters.devices.length > 0 && (
-                <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
+                <Badge
+                  variant="secondary"
+                  className="ml-2 rounded-sm px-1 font-normal"
+                >
                   {filters.devices.length}
                 </Badge>
               )}
@@ -212,11 +228,17 @@ export function FilterBar({ filters, setFilters, data }: FilterBarProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="justify-start text-left font-normal">
+            <Button
+              variant="outline"
+              className="justify-start text-left font-normal"
+            >
               <Filter className="mr-2 h-4 w-4" />
               Pays
               {filters.countries.length > 0 && (
-                <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
+                <Badge
+                  variant="secondary"
+                  className="ml-2 rounded-sm px-1 font-normal"
+                >
                   {filters.countries.length}
                 </Badge>
               )}
@@ -252,12 +274,8 @@ export function FilterBar({ filters, setFilters, data }: FilterBarProps) {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {filters.pages.map(page => (
-          <Badge
-            key={page}
-            variant="secondary"
-            className="rounded-sm"
-          >
+        {filters.pages.map((page) => (
+          <Badge key={page} variant="secondary" className="rounded-sm">
             {page}
             <button
               className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -268,12 +286,8 @@ export function FilterBar({ filters, setFilters, data }: FilterBarProps) {
             </button>
           </Badge>
         ))}
-        {filters.devices.map(device => (
-          <Badge
-            key={device}
-            variant="secondary"
-            className="rounded-sm"
-          >
+        {filters.devices.map((device) => (
+          <Badge key={device} variant="secondary" className="rounded-sm">
             {device}
             <button
               className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -284,12 +298,8 @@ export function FilterBar({ filters, setFilters, data }: FilterBarProps) {
             </button>
           </Badge>
         ))}
-        {filters.countries.map(country => (
-          <Badge
-            key={country}
-            variant="secondary"
-            className="rounded-sm"
-          >
+        {filters.countries.map((country) => (
+          <Badge key={country} variant="secondary" className="rounded-sm">
             {country}
             <button
               className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
