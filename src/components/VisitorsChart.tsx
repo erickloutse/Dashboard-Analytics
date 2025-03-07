@@ -18,19 +18,6 @@ interface VisitorsChartProps {
   data: AnalyticsData;
 }
 
-const chartDefaults = {
-  allowDataOverflow: false,
-  allowDecimals: true,
-  allowDuplicatedCategory: true,
-  hide: false,
-  mirror: false,
-  orientation: "bottom" as const,
-  padding: { left: 0, right: 0 },
-  reversed: false,
-  scale: "auto" as const,
-  tickCount: 5,
-};
-
 export function VisitorsChart({ data }: VisitorsChartProps) {
   const [timeRange, setTimeRange] = useState("7d");
 
@@ -91,15 +78,17 @@ export function VisitorsChart({ data }: VisitorsChartProps) {
               </defs>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis
-                {...chartDefaults}
                 dataKey="date"
                 className="text-xs text-muted-foreground"
                 tickMargin={10}
+                orientation="bottom"
+                scale="auto"
+                padding={{ left: 0, right: 0 }}
               />
               <YAxis
-                {...chartDefaults}
-                orientation="left"
                 className="text-xs text-muted-foreground"
+                orientation="left"
+                scale="auto"
                 padding={{ top: 0, bottom: 0 }}
               />
               <Tooltip
