@@ -148,13 +148,19 @@ export const recordVisit = async (visitData: {
 
     return response.data;
   } catch (error) {
-    console.error("Error recording visit:", error);
-    // Return a mock response to prevent errors
-    return {
+    // Instead of just logging the error, return a mock response to prevent UI errors
+    const mockVisit = {
       id: `visit-${Date.now()}`,
       timestamp: new Date(),
       ...visitData,
+      device: "desktop",
+      browser: "Unknown",
+      country: "Unknown",
     };
+
+    // Log the error but don't throw it
+    console.warn("Error recording visit (using fallback data):", error);
+    return mockVisit;
   }
 };
 
