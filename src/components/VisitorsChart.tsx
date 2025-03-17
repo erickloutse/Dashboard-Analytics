@@ -81,20 +81,28 @@ export function VisitorsChart({ data }: VisitorsChartProps) {
                 dataKey="date"
                 className="text-xs text-muted-foreground"
                 tickMargin={10}
-                orientation="bottom"
-                scale="auto"
+                height={60}
+                tick={{ fill: "currentColor" }}
+                tickLine={{ stroke: "currentColor" }}
+                axisLine={{ stroke: "currentColor" }}
                 padding={{ left: 0, right: 0 }}
-                tickFormatter={(value) => value}
-                allowDataOverflow={false}
+                minTickGap={5}
                 interval="preserveStartEnd"
+                allowDataOverflow={false}
+                scale="point"
+                type="category"
               />
               <YAxis
                 className="text-xs text-muted-foreground"
-                orientation="left"
-                scale="auto"
-                padding={{ top: 0, bottom: 0 }}
-                tickFormatter={(value) => value.toString()}
+                width={50}
+                tick={{ fill: "currentColor" }}
+                tickLine={{ stroke: "currentColor" }}
+                axisLine={{ stroke: "currentColor" }}
+                padding={{ top: 20, bottom: 20 }}
+                minTickGap={5}
                 allowDataOverflow={false}
+                scale="linear"
+                type="number"
                 domain={["auto", "auto"]}
               />
               <Tooltip
@@ -104,23 +112,45 @@ export function VisitorsChart({ data }: VisitorsChartProps) {
                   borderRadius: "0.5rem",
                   color: "hsl(var(--card-foreground))",
                 }}
+                cursor={{ fill: "hsl(var(--muted))" }}
+                formatter={(value: number) => [
+                  value.toLocaleString(),
+                  undefined,
+                ]}
               />
-              <Legend />
+              <Legend
+                verticalAlign="top"
+                height={36}
+                iconType="circle"
+                formatter={(value) => value}
+              />
               <Area
                 type="monotone"
                 dataKey="visitors"
                 name="Visiteurs"
                 stroke="hsl(var(--chart-1))"
-                fillOpacity={1}
                 fill="url(#colorVisitors)"
+                fillOpacity={1}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 1 }}
+                isAnimationActive={true}
+                animationDuration={300}
+                animationEasing="ease-in-out"
               />
               <Area
                 type="monotone"
                 dataKey="pageviews"
                 name="Pages Vues"
                 stroke="hsl(var(--chart-2))"
-                fillOpacity={1}
                 fill="url(#colorPageviews)"
+                fillOpacity={1}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 1 }}
+                isAnimationActive={true}
+                animationDuration={300}
+                animationEasing="ease-in-out"
               />
             </AreaChart>
           </ResponsiveContainer>

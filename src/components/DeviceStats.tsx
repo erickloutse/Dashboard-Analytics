@@ -93,23 +93,23 @@ export function DeviceStats({ data }: DeviceStatsProps) {
                 labelLine={false}
                 label={renderCustomizedLabel}
                 outerRadius={100}
-                fill="#8884d8"
+                innerRadius={0}
+                paddingAngle={0}
+                minAngle={0}
+                startAngle={90}
+                endAngle={-270}
                 dataKey="value"
-                // Using direct props instead of defaultProps
+                isAnimationActive={true}
                 animationBegin={0}
                 animationDuration={400}
                 animationEasing="ease"
-                blendStroke={true}
-                isAnimationActive={true}
-                legendType="rect"
-                minAngle={0}
-                paddingAngle={0}
               >
                 {(view === "devices" ? deviceData : browserData).map(
                   (entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}
+                      stroke="none"
                     />
                   )
                 )}
@@ -126,7 +126,13 @@ export function DeviceStats({ data }: DeviceStatsProps) {
                   null,
                 ]}
               />
-              <Legend />
+              <Legend
+                verticalAlign="middle"
+                align="right"
+                layout="vertical"
+                iconType="circle"
+                formatter={(value) => value}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
