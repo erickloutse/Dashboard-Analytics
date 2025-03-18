@@ -1,58 +1,64 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const visitSchema = new mongoose.Schema({
-  timestamp: {
-    type: Date,
-    default: Date.now
+const visitSchema = new mongoose.Schema(
+  {
+    timestamp: {
+      type: Date,
+      default: Date.now,
+      index: true,
+    },
+    page: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    duration: {
+      type: Number,
+      default: 0,
+    },
+    country: {
+      type: String,
+      default: "Unknown",
+      index: true,
+    },
+    device: {
+      type: String,
+      enum: ["desktop", "mobile", "tablet"],
+      default: "desktop",
+      index: true,
+    },
+    browser: {
+      type: String,
+      default: "Unknown",
+      index: true,
+    },
+    referrer: {
+      type: String,
+      default: "",
+    },
+    userAgent: {
+      type: String,
+      default: "",
+    },
+    ip: {
+      type: String,
+      default: "",
+    },
+    sessionId: {
+      type: String,
+      required: true,
+      index: true,
+    },
   },
-  page: {
-    type: String,
-    required: true
-  },
-  duration: {
-    type: Number,
-    default: 0
-  },
-  country: {
-    type: String,
-    default: 'Unknown'
-  },
-  device: {
-    type: String,
-    enum: ['desktop', 'mobile', 'tablet'],
-    default: 'desktop'
-  },
-  browser: {
-    type: String,
-    default: 'Unknown'
-  },
-  referrer: {
-    type: String,
-    default: ''
-  },
-  userAgent: {
-    type: String,
-    default: ''
-  },
-  ip: {
-    type: String,
-    default: ''
-  },
-  sessionId: {
-    type: String,
-    required: true
+  {
+    timestamps: true,
   }
-}, {
-  timestamps: true
-});
+);
 
-// Create indexes for better query performance
-visitSchema.index({ timestamp: -1 });
-visitSchema.index({ page: 1 });
-visitSchema.index({ country: 1 });
-visitSchema.index({ device: 1 });
-visitSchema.index({ sessionId: 1 });
+// Index composé pour les requêtes courantes
+visitSchema.index({ timestamp: -1, page: 1 });
+visitSchema.index({ sessionId: 1, page: 1 });
 
-const Visit = mongoose.model('Visit', visitSchema);
+const Visit = mongoose.model("Visit", visitSchema);
 
 export default Visit;

@@ -5,7 +5,7 @@ import { Server } from "socket.io";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import connectDB from "./config/db.js";
+import connectDB from "./config/mongodb.js";
 
 // Routes
 import visitsRoutes from "./routes/visits.js";
@@ -51,21 +51,21 @@ app.use("/api/stats", statsRoutes);
 
 // Socket.io connection
 io.on("connection", (socket) => {
-  console.log("A client connected:", socket.id);
+  console.log("Client connecté:", socket.id);
 
   // Send initial data to the client
-  socket.emit("welcome", { message: "Connected to Analytics Server" });
+  socket.emit("welcome", { message: "Connecté au serveur Analytics" });
 
   // Handle disconnection
   socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
+    console.log("Client déconnecté:", socket.id);
   });
 });
 
 // Start the server
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Serveur démarré sur le port ${PORT}`);
 });
 
 // Export io instance for use in other files
