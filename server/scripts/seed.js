@@ -1,5 +1,10 @@
-import { randomUUID } from "crypto";
-import { db, statements } from "../config/db.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import Visit from "../models/Visit.js";
+import Page from "../models/Page.js";
+import connectDB from "../config/mongodb.js";
+
+dotenv.config();
 
 const pages = [
   { path: "/accueil", title: "Accueil" },
@@ -45,15 +50,14 @@ function generateVisits(count) {
     const duration = Math.floor(Math.random() * 600);
 
     visits.push({
-      id: randomUUID(),
-      timestamp: date.toISOString(),
+      timestamp: date,
       page: page.path,
       duration,
       country: countries[Math.floor(Math.random() * countries.length)],
       device: devices[Math.floor(Math.random() * devices.length)],
       browser: browsers[Math.floor(Math.random() * browsers.length)],
-      session_id: sessionId,
-      user_agent: "Mozilla/5.0 (Example)",
+      sessionId,
+      userAgent: "Mozilla/5.0 (Example)",
       ip: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(
         Math.random() * 255
       )}`,
@@ -64,55 +68,63 @@ function generateVisits(count) {
   return visits;
 }
 
-function seed() {
+async function seed() {
   try {
-    console.log("Starting database seeding...");
+    console.log("Connexion à MongoDB...");
+    await connectDB();
 
-    // Begin transaction
-    const transaction = db.transaction(() => {
-      // Clear existing data
-      db.prepare("DELETE FROM visits").run();
-      db.prepare("DELETE FROM pages").run();
-      console.log("Cleared existing data");
+    console.log("Suppression des données existantes...");
+    await Promise.all([Visit.deleteMany({}), Page.deleteMany({})]);
 
-      // Generate and insert visits
-      const visits = generateVisits(1000);
-      console.log("Generated 1000 sample visits");
+    console.log("Génération des données de test...");
+    const visits = generateVisits(1000);
 
-      // Insert visits and update page statistics
-      for (const visit of visits) {
-        statements.insertVisit.run(visit);
-        statements.updatePageStats.run({
-          path: visit.page,
-          title: pages.find((p) => p.path === visit.page)?.title || visit.page,
-          duration: visit.duration,
-          session_id: visit.session_id,
-        });
-      }
+    console.log("Insertion des visites...");
+    await Visit.insertMany(visits);
 
-      // Update bounce rates
-      for (const page of pages) {
-        const bounceRate = Math.random() * 100;
-        db.prepare(
-          `
-          UPDATE pages 
-          SET bounce_rate = ? 
-          WHERE path = ?
-        `
-        ).run(bounceRate, page.path);
-      }
+    console.log("Mise à jour des statistiques des pages...");
+    for (const page of pages) {
+      const pageVisits = visits.filter((v) => v.page === page.path);
+      const uniqueVisitors = new Set(pageVisits.map((v) => v.sessionId)).size;
+      const totalDuration = pageVisits.reduce((sum, v) => sum + v.duration, 0);
+      const avgTimeOnPage =
+        pageVisits.length > 0 ? totalDuration / pageVisits.length : 0;
 
-      console.log("Inserted visits and updated page statistics");
-    });
+      // Calculer le taux de rebond
+      const sessions = new Map();
+      pageVisits.forEach((visit) => {
+        if (!sessions.has(visit.sessionId)) {
+          sessions.set(visit.sessionId, []);
+        }
+        sessions.get(visit.sessionId).push(visit);
+      });
 
-    // Execute transaction
-    transaction();
-    console.log("Seeding completed successfully");
+      const bounceCount = Array.from(sessions.values()).filter(
+        (sessionVisits) =>
+          sessionVisits.length === 1 && sessionVisits[0].duration < 30
+      ).length;
+
+      const bounceRate =
+        sessions.size > 0 ? (bounceCount / sessions.size) * 100 : 0;
+
+      await Page.create({
+        path: page.path,
+        title: page.title,
+        views: pageVisits.length,
+        uniqueVisitors,
+        avgTimeOnPage,
+        bounceRate,
+        lastUpdated: new Date(),
+      });
+    }
+
+    console.log("Données de test générées avec succès !");
+    process.exit(0);
   } catch (error) {
-    console.error("Error seeding database:", error);
+    console.error("Erreur lors de la génération des données:", error);
     process.exit(1);
   }
 }
 
-// Run seeding
+// Lancer le script
 seed();
