@@ -44,7 +44,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ALL API Routes
+// API Routes
 app.use("/api/visits", visitsRoutes);
 app.use("/api/pages", pagesRoutes);
 app.use("/api/stats", statsRoutes);
