@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import connectDB from "./config/mongodb.js";
 
-// All Routes
+// Routes
 import visitsRoutes from "./routes/visits.js";
 import pagesRoutes from "./routes/pages.js";
 import statsRoutes from "./routes/stats.js";
