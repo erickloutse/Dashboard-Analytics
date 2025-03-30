@@ -20,6 +20,7 @@ const __dirname = dirname(__filename);
 
 // Initialize Express app
 const app = express();
+
 const httpServer = createServer(app);
 
 // Connect to MongoDB
