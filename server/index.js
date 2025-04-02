@@ -35,7 +35,7 @@ const io = new Server(httpServer, {
   },
 });
 
-// Middleware
+// Middlewares
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
