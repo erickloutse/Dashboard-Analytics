@@ -28,7 +28,6 @@ const countries = [
   "Canada",
   "Espagne",
   "Italie",
-  "Chine",
   "Japon",
   "Australie",
   "Brésil",
