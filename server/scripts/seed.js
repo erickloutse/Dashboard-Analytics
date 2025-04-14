@@ -34,6 +34,7 @@ const countries = [
   "Brésil",
   "Inde",
   "Russe",
+  "Indonésie",
 ];
 
 const browsers = ["Chrome", "Firefox", "Safari", "Edge", "Other"];
